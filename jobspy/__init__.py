@@ -40,7 +40,6 @@ SCRAPER_MAPPING: dict[Site, type[Scraper]] = {
     Site.ZIP_RECRUITER: ZipRecruiter,
     Site.GLASSDOOR: Glassdoor,
     Site.GOOGLE: Google,
-    Site.BAYT: Bayt,
     Site.NAUKRI: Naukri,
     Site.BDJOBS: BDJobs,
     Site.HELLOWORK: HelloWork,

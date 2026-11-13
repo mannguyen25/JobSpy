@@ -55,6 +55,28 @@ class Job(BaseModel):
             AliasPath("status", "postedAtUtc"),
         )
     )
+
+    @field_validator("postedAtUtc", mode="before")
+    @classmethod
+    def _normalize_posted_at(cls, v):
+        """Normalize the postedAtUtc value coming from ZipRecruiter.
+
+        ZipRecruiter sometimes returns a string of the form ``$n<epoch_seconds>``.
+        Pydantic cannot parse this into a ``datetime``.  This validator converts
+        that string to a proper UTC datetime.  If the value is already a number
+        or a proper ISO string, it is returned unchanged.
+        """
+        if isinstance(v, str):
+            # Strip the ``$n`` prefix and convert to int.
+            if v.startswith("$n"):
+                try:
+                    epoch = int(v[2:])
+                    return datetime.utcfromtimestamp(epoch)
+                except ValueError:
+                    pass
+            # Try to parse as ISO‑8601; if it fails we let Pydantic raise.
+            return v
+        return v
     employmentTypes: list[EmploymentType]
     countryCode: str | None = Field(
         default=None, validation_alias=AliasPath("location", "countryCode")
