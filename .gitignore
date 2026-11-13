@@ -7,5 +7,6 @@
 **/.DS_Store
 *.pyc
 .env
+.csv
 dist
 .secrets/
